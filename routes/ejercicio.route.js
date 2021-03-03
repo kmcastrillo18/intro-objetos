@@ -5,9 +5,10 @@ const router = express.Router();
 const Ejercicio = require('../models/ejercicios.model');
 
 router.post('/registrar-ejercicio', (req, res) => {
+    let obj_ejercicio = JSON.parse(req.body.obj);
     let ejercicio = new Ejercicio({
-        nombre: req.body.nombre,
-        zona: req.body.zona,
+        nombre: obj_ejercicio.nombre,
+        zona: obj_ejercicio.zona,
         estado: 'Activo'
     });
     ejercicio.save((err, ejercicio_bd) => {
@@ -25,7 +26,7 @@ router.post('/registrar-ejercicio', (req, res) => {
 });
 
 router.get('/listar-ejercicios', (req, res) => {
-    Ejercicio.find((err, lista_ejercicios) => {
+    Ejercicio.find((err, lista) => {
         if (err) {
             res.json({
                 msj: 'No se encontraron ejercicios',
@@ -34,7 +35,7 @@ router.get('/listar-ejercicios', (req, res) => {
         }
         else {
             res.json({
-                lista_ejercicios
+                lista
             });
         }
     });
@@ -57,11 +58,12 @@ router.get('/buscar-ejercicio', (req, res) => {
 });
 
 router.put('/modificar-ejercicio', (req, res) => {
+    let obj_ejercicio = JSON.parse(req.body.obj);
     Ejercicio.updateOne({_id: req.body._id},{
         $set: {
-            nombre: req.body.nombre,
-            zona: req.body.zona,
-            estado: req.body.estado
+            nombre: obj_ejercicio.nombre,
+            zona: obj_ejercicio.zona,
+            estado: obj_ejercicio.estado
         } //Cuando se hace un update, se hace un set a cada campo
     }, (err, info) => {
         if (err) {
